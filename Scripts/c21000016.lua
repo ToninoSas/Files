@@ -6,7 +6,7 @@ function s.initial_effect(c)
     local e1 = Effect.CreateEffect(c)
     e1:SetCategory(CATEGORY_SPECIAL_SUMMON + CATEGORY_NEGATE)
     e1:SetType(EFFECT_TYPE_ACTIVATE)
-    e1:SetCode(EVENT_FREE_CHAIN)
+    e1:SetCode(EVENT_CHAINING)
     e1:SetHintTiming(0, TIMINGS_CHECK_MONSTER + TIMING_END_PHASE)
     e1:SetTarget(s.target)
     e1:SetOperation(s.activate)
@@ -16,6 +16,13 @@ end
 function s.filter(c, e, tp)
     return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0x81c)
 end
+
+function s.con(e, tp, eg, ep, ev, re, r, rp)
+    local rc = re:GetHandler()
+    return (rc:IsControler(1 - tp) and rc:IsType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)) or 
+        Duel.IsExistingMatchingCard(s.filter, tp, LOCATION_MZONE, 0, 1, nil, e, tp)
+end
+
 
 function s.target(e, tp, eg, ep, ev, re, r, rp, chk)
     if chk == 0 then

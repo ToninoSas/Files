@@ -53,7 +53,6 @@ function s.operation(e, tp, eg, ep, ev, re, r, rp)
         e1:SetType(EFFECT_TYPE_SINGLE)
         e1:SetCode(EFFECT_UPDATE_ATTACK)
         e1:SetValue(atk)
-        e1:SetReset(RESET_EVENT + RESETS_STANDARD + RESET_PHASE + PHASE_END)
         c:RegisterEffect(e1)
     end
 
@@ -62,6 +61,7 @@ function s.operation(e, tp, eg, ep, ev, re, r, rp)
         local e2 = Effect.CreateEffect(c)
         e2:SetType(EFFECT_TYPE_SINGLE)
         e2:SetCode(EFFECT_EXTRA_ATTACK)
+        -- max un attacco extra
         if(mt>1) then
             e2:SetValue(1)
         else

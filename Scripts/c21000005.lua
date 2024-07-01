@@ -7,7 +7,7 @@ function c21000005.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE + EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
-	e1:SetCountLimit(1)
+	e1:SetCountLimit(1, id)
     e1:SetDescription(aux.Stringid(id,0))
 -- devono esserci gatterman nel deck
     e1:SetCondition(s.condition)
@@ -26,6 +26,7 @@ function c21000005.initial_effect(c)
     e3:SetType(EFFECT_TYPE_SINGLE + EFFECT_TYPE_TRIGGER_O)
     e3:SetCode(EVENT_BATTLE_DESTROYED)
     e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCountLimit(1, id)
     e3:SetCondition(c21000005.ctcon)
     e3:SetTarget(c21000005.cttg)
     e3:SetOperation(c21000005.ctop)
@@ -34,7 +35,8 @@ end
 
 -- devono esserci gatterman nel deck
 function c21000005.condition(e, tp, eg, ep, ev, re, r, rp)
-    return Duel.GetMatchingGroup(c21000005.filter,tp,LOCATION_DECK,0,nil):GetCount()>0
+    return Duel.GetMatchingGroup(c21000005.filter,tp,LOCATION_DECK,0,nil):GetCount()>0 
+        and not Duel.IsExistingMatchingCard(Card.IsType, tp, LOCATION_FZONE, 0, 1, nil, TYPE_FIELD)
 end
 
 function c21000005.filter(c, tp)
