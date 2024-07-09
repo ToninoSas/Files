@@ -15,6 +15,8 @@ end
 
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
     return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+
 end
 
 function s.spfilter(c,e,tp)

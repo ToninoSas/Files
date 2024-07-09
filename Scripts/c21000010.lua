@@ -5,8 +5,10 @@ function c21000010.initial_effect(c)
 	--Halve the ATK of 1 face-up monster on the field
 	local e1=Effect.CreateEffect(c)
 	-- e1:SetDescription(aux.Stringid(c21000010,0))
+	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1, 21000010)
 	e1:SetTarget(c21000010.atktg)
 	e1:SetOperation(c21000010.atkop)
@@ -28,7 +30,7 @@ function c21000010.initial_effect(c)
     e3:SetCondition(c21000010.spcon)
     e3:SetTarget(c21000010.sptg)
     e3:SetOperation(c21000010.spop)
-    e3:SetCountLimit(1, 21000010)
+    e3:SetCountLimit(1, 21000010+1)
     c:RegisterEffect(e3)
 end
 
@@ -60,7 +62,7 @@ end
 function c21000010.spfilter(c, tp)
 	-- eccetto andrea
     return not c:IsCode(21000010) and 
-	c:IsControler(tp) and c:IsReason(REASON_BATTLE + REASON_EFFECT) and c:IsSetCard(0x81c) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP)
+	c:IsControler(tp) and c:IsReason(REASON_BATTLE + REASON_EFFECT) and c:IsSetCard(0x81c) and c:IsPreviousLocation(LOCATION_MZONE) and c:IsPreviousPosition(POS_FACEUP+POS_FACEUP_DEFENSE)
 end
 
 function c21000010.spcon(e, tp, eg, ep, ev, re, r, rp)

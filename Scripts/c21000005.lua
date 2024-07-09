@@ -46,7 +46,7 @@ end
 function c21000005.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c21000005.filter,tp,LOCATION_DECK,0,nil)
 
-	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+	if g:GetCount()>0 then
 
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
         local tc=Duel.SelectMatchingCard(tp,c21000005.filter,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()

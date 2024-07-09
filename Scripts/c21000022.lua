@@ -37,11 +37,13 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-    local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-    if g:GetCount()>0 then
-        Duel.SendtoHand(g,nil,REASON_EFFECT)
-        Duel.ConfirmCards(1-tp,g)
+    if( Duel.SelectYesNo(tp,aux.Stringid(id,0))) then
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+        local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+        if g:GetCount()>0 then
+            Duel.SendtoHand(g,nil,REASON_EFFECT)
+            Duel.ConfirmCards(1-tp,g)
+        end
     end
 end
 
@@ -50,7 +52,9 @@ function s.repfilter(c,tp)
     return 
     -- c:IsFaceup() and 
     c:IsSetCard(0x81c) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsControler(tp)
-        and not c:IsReason(REASON_REPLACE) and c:IsReason(REASON_EFFECT)
+        and c:IsLocation(LOCATION_SZONE+LOCATION_FZONE)
+        and not c:IsReason(REASON_REPLACE) 
+        and c:IsReason(REASON_EFFECT)
 end
 
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)

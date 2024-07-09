@@ -29,7 +29,7 @@ function c21000008.initial_effect(c)
 end
 
 function c21000008.saf_filter(c)
-	return c:IsSetCard(0x81c) -- Replace SET_CODE_ARCHETYPE with your specific archetype code
+	return c:IsSetCard(0x81c) and c:IsType(TYPE_MONSTER) -- Replace SET_CODE_ARCHETYPE with your specific archetype code
 end
 
 function c21000008.val(e,c)

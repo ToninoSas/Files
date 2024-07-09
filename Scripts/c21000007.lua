@@ -29,6 +29,10 @@ function s.target(e, tp, eg, ep, ev, re, r, rp, chk)
     Duel.SetChainLimit(aux.FALSE)
 end
 
+function s.filter(c,tp)
+    return c:IsSetCard(0x81c) and c:IsType(TYPE_MONSTER)
+end
+
 function s.activate(e, tp, eg, ep, ev, re, r, rp)
     if Duel.NegateAttack() then
         local e1 = Effect.CreateEffect(e:GetHandler())
@@ -41,7 +45,7 @@ function s.activate(e, tp, eg, ep, ev, re, r, rp)
         
         Duel.BreakEffect()
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
-        local g = Duel.SelectMatchingCard(tp, aux.NecroValleyFilter(Card.IsSetCard), tp, LOCATION_GRAVE, 0, 1, 1, nil, 0x81c)
+        local g = Duel.SelectMatchingCard(tp, s.filter, tp, LOCATION_GRAVE, 0, 1, 1, nil)
         if g:GetCount() > 0 then
             Duel.SendtoHand(g, nil, REASON_EFFECT)
             Duel.ConfirmCards(1 - tp, g)
