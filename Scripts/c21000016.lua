@@ -34,47 +34,41 @@ function s.attach_filter(c, e)
     return c:IsCanBeEffectTarget(e) and c:IsType(TYPE_MONSTER) and c:IsCanOverlay()
 end
 
--- function s.attach_con(c, e)
---     return (Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,0,1,nil)
---             and Duel.IsExistingTarget(s.attach_filter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil,c, e))
--- end
-
 function s.attach_target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    -- if chkc then return false end
-    if chk==0 then
-        return Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,0,1,nil)
-            and Duel.IsExistingTarget(s.attach_filter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil,e)
+    if chkc then return false end
+    if chk == 0 then
+        if (not Duel.IsExistingTarget(s.filter, tp, LOCATION_MZONE, 0, 1, nil))
+            or (not Duel.IsExistingMatchingCard(s.attach_filter, tp, LOCATION_MZONE+LOCATION_GRAVE, LOCATION_MZONE+LOCATION_GRAVE, 1, nil, e))then
+            return false
+        end
+
+        local gXyz=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,0,nil)
+        local xyz = gXyz:GetFirst()
+
+        local gMaterial = Duel.GetMatchingGroup(s.attach_filter, tp, LOCATION_MZONE+LOCATION_GRAVE, LOCATION_MZONE+LOCATION_GRAVE, nil, e)
+        local filtered = gMaterial:Filter(aux.TRUE, xyz)
+
+        return #filtered>0
     end
-    -- Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-    -- local xyz=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
+
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+    local gXyz=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
+    local xyz = gXyz:GetFirst()
     
-    -- Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-    -- local material=Duel.SelectTarget(tp,s.attach_filter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,1,xyz:GetFirst(),e)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+    local gMaterial = Duel.SelectTarget(tp, function(c,e) return s.attach_filter(c,e) and c~=xyz end, tp, LOCATION_MZONE+LOCATION_GRAVE, LOCATION_MZONE+LOCATION_GRAVE, 1, 1, nil, e)
 
-    -- e:SetLabelObject(xyz:GetFirst())
-
-    -- Duel.SetTargetCard(material)
+    Duel.SetOperationInfo(0, CATEGORY_LEAVE_GRAVE, gMaterial, 1, 0, 0)
 end
 
 function s.attach_operation(e,tp,eg,ep,ev,re,r,rp)
-    -- local xyz=Duel.GetFirstTarget()
-    -- local material=e:GetLabelObject()
-    -- -- if not material:IsType(TYPE_XYZ) then xyz,material=material,xyz end
-    -- if material:IsRelateToEffect(e) and xyz:IsRelateToEffect(e) and xyz:IsFaceup() and material:IsCanOverlay() then
-    --     -- Duel.Overlay(xyz,material)
-    --     -- Duel.Overlay(material,xyz)
-    -- end
-
-    if not (Duel.IsExistingTarget(s.filter,tp,LOCATION_MZONE,0,1,nil)
-            and Duel.IsExistingTarget(s.attach_filter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,nil,e)) then return end
-
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-    local xyz=Duel.SelectTarget(tp,s.filter,tp,LOCATION_MZONE,0,1,1,nil)
+    local g = Duel.GetChainInfo(0, CHAININFO_TARGET_CARDS)
+    local xyz = g:Filter(Card.IsType, nil, TYPE_XYZ):GetFirst()
+    local tc = g:Filter(aux.TRUE, xyz):GetFirst()
     
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-    local material=Duel.SelectTarget(tp,s.attach_filter,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_MZONE+LOCATION_GRAVE,1,1,xyz:GetFirst(),e)
-
-    Duel.Overlay(xyz:GetFirst(),material:GetFirst())
+    if xyz and tc and tc:IsRelateToEffect(e) and tc:IsCanOverlay() then
+        Duel.Overlay(xyz, tc)
+    end
 end
 
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)

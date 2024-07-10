@@ -9,6 +9,7 @@ function s.initial_effect(c)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
     e1:SetRange(LOCATION_HAND)
+    e1:SetCountLimit(1, id)
     e1:SetCondition(s.spcon)
     c:RegisterEffect(e1)
 
@@ -29,7 +30,7 @@ function s.initial_effect(c)
     e3:SetCondition(s.descon)
     e3:SetTarget(s.destg)
     e3:SetOperation(s.desop)
-    e3:SetCountLimit(1, id)
+    e3:SetCountLimit(1, id+1)
     c:RegisterEffect(e3)
 end
 
